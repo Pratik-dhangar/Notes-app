@@ -8,5 +8,6 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,             // Enable all strict type-checking
     "skipLibCheck": true        // Skip type checking of declaration files
-  }
+  },
+  "include": ["src/**/*"]
 }
