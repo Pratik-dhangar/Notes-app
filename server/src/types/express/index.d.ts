@@ -1,8 +1,9 @@
-// This file extends the Express Request type globally
-declare namespace Express {
-  export interface Request {
-    user?: {
-      id: string;
-    };
+import { IUser } from '../models/userModel';
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: { id: string };
+    }
   }
 }

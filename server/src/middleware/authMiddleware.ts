@@ -2,8 +2,6 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import User from '../models/userModel';
 
-// No longer need the custom AuthRequest interface!
-
 export const protect = async (req: Request, res: Response, next: NextFunction) => {
   let token;
 
@@ -18,8 +16,7 @@ export const protect = async (req: Request, res: Response, next: NextFunction) =
         return res.status(401).json({ message: 'User not found' });
       }
 
-      // TypeScript now understands that req.user can have an 'id'
-     req.user = { id: String(user._id) };
+      req.user = { id: String(user._id) };
       next();
     } catch (error) {
       console.error(error);

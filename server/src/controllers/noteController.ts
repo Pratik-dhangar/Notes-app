@@ -5,9 +5,8 @@ import Note from '../models/noteModel';
 // @route   POST /api/notes
 export const createNote = async (req: Request, res: Response) => {
   try {
-    // 👇 Add this check at the top
     if (!req.user) {
-      return res.status(401).json({ message: 'User not authenticated' });
+      return res.status(401).json({ message: 'Unauthorized: User not found' });
     }
 
     const { content } = req.body;
@@ -18,7 +17,7 @@ export const createNote = async (req: Request, res: Response) => {
 
     const note = await Note.create({
       content,
-      userId: req.user.id, // TypeScript is now happy
+      userId: (req.user as any).id, // Use req.user.id directly
     });
 
     res.status(201).json(note);
@@ -31,12 +30,11 @@ export const createNote = async (req: Request, res: Response) => {
 // @route   GET /api/notes
 export const getNotes = async (req: Request, res: Response) => {
   try {
-    // 👇 Add this check at the top
     if (!req.user) {
-      return res.status(401).json({ message: 'User not authenticated' });
+      return res.status(401).json({ message: 'Unauthorized: User not found' });
     }
 
-    const notes = await Note.find({ userId: req.user.id }).sort({ createdAt: -1 });
+    const notes = await Note.find({ userId: (req.user as any).id }).sort({ createdAt: -1 }); // Use req.user.id
     res.status(200).json(notes);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
@@ -47,9 +45,8 @@ export const getNotes = async (req: Request, res: Response) => {
 // @route   DELETE /api/notes/:id
 export const deleteNote = async (req: Request, res: Response) => {
   try {
-    // 👇 Add this check at the top
     if (!req.user) {
-      return res.status(401).json({ message: 'User not authenticated' });
+      return res.status(401).json({ message: 'Unauthorized: User not found' });
     }
 
     const note = await Note.findById(req.params.id);
@@ -58,7 +55,7 @@ export const deleteNote = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Note not found' });
     }
 
-    if (note.userId.toString() !== req.user.id) {
+    if (note.userId.toString() !== (req.user as any).id) { // Use req.user.id
       return res.status(401).json({ message: 'User not authorized' });
     }
 

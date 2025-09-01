@@ -1,102 +1,110 @@
 /// <reference path="../types/custom.d.ts" />
 import { Request, Response } from 'express';
-import User, { IUser } from '../models/userModel'; // Updated import to include IUser
-import otpGenerator from 'otp-generator';
+import User, { IUser } from '../models/userModel';
+import * as otpGenerator from 'otp-generator';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import sendEmail from '../utils/mailer';
 
-// @desc    Generate OTP for login/signup
-// @route   POST /api/auth/generate-otp
+
+// SIGNUP: Generate OTP for a NEW user
 export const generateOtp = async (req: Request, res: Response) => {
-  // ... (this function remains unchanged)
+  try {
+    const { email, name, dateOfBirth } = req.body;
+    if (!email || !name) {
+      return res.status(400).json({ message: 'Email and Name are required' });
+    }
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({ message: 'Account with this email already exists. Please log in.' });
+    }
+    
+    const otp = otpGenerator.generate(6, { upperCaseAlphabets: false, lowerCaseAlphabets: false, specialChars: false });
+    const hashedOtp = await bcrypt.hash(otp, 10);
+    const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+    const newUser = new User({ email, name, dateOfBirth, otp: hashedOtp, otpExpires });
+    await newUser.save();
+    
+    await sendEmail(email, 'Your OTP for Notes App', `Your verification code is: ${otp}`);
+    res.status(200).json({ message: 'OTP sent successfully. Please verify to complete signup.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+// LOGIN: Generate OTP for an EXISTING user
+export const login = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
     if (!email) {
       return res.status(400).json({ message: 'Email is required' });
     }
-    const otp = otpGenerator.generate(6, {
-      upperCaseAlphabets: false,
-      lowerCaseAlphabets: false,
-      specialChars: false,
-    });
-    const salt = await bcrypt.genSalt(10);
-    const hashedOtp = await bcrypt.hash(otp, salt);
-    const otpExpires = new Date(new Date().getTime() + 10 * 60 * 1000);
-    let user = await User.findOneAndUpdate(
-      { email },
-      { otp: hashedOtp, otpExpires, name: 'New User' },
-      { upsert: true, new: true, setDefaultsOnInsert: true }
-    );
-    await sendEmail(
-      email,
-      'Your OTP for Note Taking App',
-      `Your verification code is: ${otp}`
-    );
-    res.status(200).json({ message: 'OTP sent successfully to your email.' });
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found. Please create an account.' });
+    }
+    
+    const otp = otpGenerator.generate(6, { upperCaseAlphabets: false, lowerCaseAlphabets: false, specialChars: false });
+    user.otp = await bcrypt.hash(otp, 10);
+    user.otpExpires = new Date(Date.now() + 10 * 60 * 1000);
+    await user.save();
+    
+    await sendEmail(email, 'Your Login OTP for Notes App', `Your login OTP is: ${otp}`);
+    res.status(200).json({ message: 'Login OTP sent successfully to your email.' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Server Error' });
   }
 };
 
-// @desc    Verify OTP and log in/sign up the user
-// @route   POST /api/auth/verify-otp
+// VERIFY: Verify OTP for both LOGIN and SIGNUP
 export const verifyOtp = async (req: Request, res: Response) => {
-  // ... (this function remains unchanged)
   try {
-    const { email, otp, name } = req.body;
+    const { email, otp } = req.body;
     if (!email || !otp) {
       return res.status(400).json({ message: 'Email and OTP are required' });
     }
+
     const user = await User.findOne({ email });
     if (!user || !user.otp || !user.otpExpires) {
-      return res.status(400).json({ message: 'Invalid request or OTP expired.' });
+      return res.status(400).json({ message: 'Invalid request. Please try signing up or logging in again.' });
     }
+
     if (new Date() > user.otpExpires) {
       return res.status(400).json({ message: 'OTP has expired.' });
     }
+
     const isMatch = await bcrypt.compare(otp, user.otp);
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid OTP.' });
     }
-    if (name) {
-      user.name = name;
-    }
+
     user.otp = undefined;
     user.otpExpires = undefined;
     await user.save();
+    
     const payload = { userId: user._id };
-    const token = jwt.sign(payload, process.env.JWT_SECRET as string, {
-      expiresIn: '3d',
-    });
-    res.status(200).json({
-      message: 'Login successful!',
+    const token = jwt.sign(payload, process.env.JWT_SECRET as string, { expiresIn: '3d' });
+    
+    res.status(201).json({
+      message: 'Account verified successfully!',
       token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-      },
+      user: { id: user._id, name: user.name, email: user.email },
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Server Error' });
   }
 };
 
-
-// @desc    Handle Google OAuth callback, generate JWT, and redirect
-// @route   GET /api/auth/google/callback
+// GOOGLE OAUTH CALLBACK
 export const googleCallback = (req: Request, res: Response) => {
-  const user = req.user as IUser; // User object attached by Passport
-
-  // Generate JWT for the authenticated user
+  const user = req.user as IUser;
   const payload = { userId: user._id };
-  const token = jwt.sign(payload, process.env.JWT_SECRET as string, {
-    expiresIn: '3d',
-  });
-
-  // Redirect to the frontend application with the token
+  const token = jwt.sign(payload, process.env.JWT_SECRET as string, { expiresIn: '3d' });
   res.redirect(`${process.env.CLIENT_URL}/login/success?token=${token}`);
 };
