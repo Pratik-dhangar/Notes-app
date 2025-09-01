@@ -1,19 +1,18 @@
 import { Router } from 'express';
 import { protect } from '../middleware/authMiddleware';
+import { createNote, getNotes, deleteNote } from '../controllers/noteController';
 
 const router = Router();
 
-// We'll add our controller functions here in the next step.
-// For now, let's create placeholder routes to see how to use the middleware.
+// This applies the 'protect' middleware to ALL routes defined in this file.
+// Any request to /api/notes/... will require a valid token.
+router.use(protect);
 
-// GET /api/notes - This will be a protected route
-router.get('/', protect, (req, res) => {
-  res.json({ message: 'Welcome to the protected notes route!' });
-});
+router.route('/')
+  .get(getNotes)
+  .post(createNote);
 
-// POST /api/notes - This will also be a protected route
-router.post('/', protect, (req, res) => {
-  res.json({ message: 'Note created successfully!' });
-});
+router.route('/:id')
+  .delete(deleteNote);
 
 export default router;
