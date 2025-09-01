@@ -4,6 +4,7 @@ import cors from 'cors';
 import passport from 'passport';
 import connectDB from './config/db';
 import authRoutes from './routes/authRoutes'
+import noteRoutes from './routes/noteRoutes';
 import { configurePassport } from './config/passport';
 
 // Load environment variables
@@ -29,7 +30,7 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.use('/api/auth', authRoutes); //auth-routes
-
+app.use('/api/notes', noteRoutes); // notes routes
 
 
 app.listen(PORT, () => {
