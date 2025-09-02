@@ -73,10 +73,10 @@ const DashboardPage = () => {
   }
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100 min-h-screen">
       <div className="max-w-3xl mx-auto px-4 py-8">
         {/* Welcome Card */}
-        <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 mb-8 border border-gray-200">
+        <div className="bg-white/90 backdrop-blur-sm rounded-lg shadow-lg p-4 sm:p-6 mb-8 border border-white/20">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
             <div className="flex-1">
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">
@@ -97,23 +97,25 @@ const DashboardPage = () => {
           </div>
         </div>
 
-        <form onSubmit={handleAddNote} className="mb-8">
-          <textarea
-            value={newNoteContent}
-            onChange={(e) => setNewNoteContent(e.target.value)}
-            placeholder="Add a new note..."
-            className="w-full border border-border-default rounded-lg p-3 focus:ring-2 focus:ring-primary-blue focus:border-primary-blue"
-            rows={3}
-          ></textarea>
-          <button type="submit" className="w-full mt-2 bg-primary-blue text-white font-medium py-3 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue">
-            Add Note
-          </button>
-        </form>
+        <div className="bg-white/90 backdrop-blur-sm rounded-lg shadow-lg p-4 sm:p-6 mb-8 border border-white/20">
+          <form onSubmit={handleAddNote}>
+            <textarea
+              value={newNoteContent}
+              onChange={(e) => setNewNoteContent(e.target.value)}
+              placeholder="Add a new note..."
+              className="w-full border border-border-default rounded-lg p-3 focus:ring-2 focus:ring-primary-blue focus:border-primary-blue"
+              rows={3}
+            ></textarea>
+            <button type="submit" className="w-full mt-2 bg-primary-blue text-white font-medium py-3 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue">
+              Add Note
+            </button>
+          </form>
+        </div>
 
         <div className="space-y-4">
           {notes.length > 0 ? (
             notes.map(note => (
-              <div key={note._id} className="bg-white border border-border-default rounded-lg p-4 flex justify-between items-start">
+              <div key={note._id} className="bg-white/90 backdrop-blur-sm border border-white/20 rounded-lg p-4 flex justify-between items-start shadow-lg">
                 <p className="text-text-primary pr-4 break-words">{note.content}</p>
                 <button onClick={() => handleDeleteNote(note._id)} className="text-red-500 hover:text-red-700 font-semibold text-sm flex-shrink-0">
                   Delete
@@ -121,7 +123,7 @@ const DashboardPage = () => {
               </div>
             ))
           ) : (
-            <div className="text-center py-8">
+            <div className="bg-white/90 backdrop-blur-sm border border-white/20 rounded-lg p-8 text-center shadow-lg">
                 <p className="text-text-secondary">You have no notes yet. Add one above to get started!</p>
             </div>
           )}
