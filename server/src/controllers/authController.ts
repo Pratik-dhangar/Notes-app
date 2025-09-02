@@ -108,3 +108,28 @@ export const googleCallback = (req: Request, res: Response) => {
   const token = jwt.sign(payload, process.env.JWT_SECRET as string, { expiresIn: '3d' });
   res.redirect(`${process.env.CLIENT_URL}/login/success?token=${token}`);
 };
+
+// GET USER PROFILE
+export const getUserProfile = async (req: Request, res: Response) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    const userId = (req.user as any).id; // Use req.user.id directly
+    const user = await User.findById(userId).select('-otp -otpExpires');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      dateOfBirth: user.dateOfBirth,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};

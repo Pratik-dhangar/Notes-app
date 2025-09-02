@@ -9,12 +9,28 @@ interface Note {
   createdAt: string;
 }
 
+interface User {
+  _id: string;
+  name: string;
+  email: string;
+}
+
 const DashboardPage = () => {
   const [notes, setNotes] = useState<Note[]>([]);
   const [newNoteContent, setNewNoteContent] = useState('');
+  const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const { data } = await api.get('/auth/profile');
+        setUser(data);
+      } catch (error) {
+        toast.error("Failed to fetch user information.");
+      }
+    };
+
     const fetchNotes = async () => {
       try {
         const { data } = await api.get('/notes');
@@ -23,6 +39,8 @@ const DashboardPage = () => {
         toast.error("Failed to fetch notes.");
       }
     };
+
+    fetchUserData();
     fetchNotes();
   }, []);
 
@@ -58,7 +76,9 @@ const DashboardPage = () => {
     <div className="bg-gray-50 min-h-screen">
       <div className="max-w-3xl mx-auto px-4 py-8">
         <header className="flex justify-between items-center mb-8">
-          <h2 className="text-2xl font-semibold text-text-primary">Welcome back!</h2>
+          <h2 className="text-2xl font-semibold text-text-primary">
+            Welcome{user ? `, ${user.name}` : ''}
+          </h2>
           <button onClick={handleLogout} className="text-sm font-medium text-text-secondary hover:text-primary-blue">Logout</button>
         </header>
 
