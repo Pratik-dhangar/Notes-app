@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useState, useEffect, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../services/Api';
 import { toast } from 'react-toastify';
@@ -22,12 +22,34 @@ const SignUpPage = () => {
   const [name, setName] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('');
   const [otp, setOtp] = useState('');
+  const [showOtp, setShowOtp] = useState(false);
+  const [resendTimer, setResendTimer] = useState(0);
+  const [canResend, setCanResend] = useState(false);
   const navigate = useNavigate();
+
+  // Timer effect for resend functionality
+  useEffect(() => {
+    let interval: number;
+    if (resendTimer > 0) {
+      interval = setInterval(() => {
+        setResendTimer((prev) => {
+          if (prev <= 1) {
+            setCanResend(true);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [resendTimer]);
 
   const handleGetOtp = async () => {
     try {
       await api.post('/auth/generate-otp', { email, name, dateOfBirth });
       setOtpSent(true);
+      setResendTimer(15);
+      setCanResend(false);
       toast.success('OTP has been sent to your email!');
     } catch (err: any) {
       toast.error(err.response?.data?.message || 'Sign up failed.');
@@ -42,6 +64,19 @@ const SignUpPage = () => {
       navigate('/dashboard');
     } catch (err: any) {
       toast.error(err.response?.data?.message || 'Invalid OTP.');
+    }
+  };
+
+  const handleResendOtp = async () => {
+    if (!canResend) return;
+    try {
+      await api.post('/auth/generate-otp', { email, name, dateOfBirth });
+      setResendTimer(15);
+      setCanResend(false);
+      setOtp(''); // Clear current OTP
+      toast.success('New OTP has been sent to your email!');
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || 'Failed to resend OTP.');
     }
   };
 
@@ -78,7 +113,49 @@ const SignUpPage = () => {
             {otpSent && (
               <div>
                 <label className="text-sm font-medium text-text-secondary">OTP</label>
-                <input type="text" value={otp} onChange={(e) => setOtp(e.target.value)} required className="w-full mt-1 border border-border-default rounded-lg p-2 focus:ring-2 focus:ring-primary-blue focus:border-primary-blue" />
+                <div className="relative">
+                  <input 
+                    type={showOtp ? "text" : "password"} 
+                    value={otp} 
+                    onChange={(e) => setOtp(e.target.value)} 
+                    required 
+                    className="w-full mt-1 border border-border-default rounded-lg p-2 pr-10 focus:ring-2 focus:ring-primary-blue focus:border-primary-blue" 
+                    placeholder="Enter 6-digit OTP"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowOtp(!showOtp)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                  >
+                    {showOtp ? (
+                      // Eye slash icon (hide)
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
+                      </svg>
+                    ) : (
+                      // Eye icon (show)
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
+                <div className="mt-2 text-sm">
+                  {canResend ? (
+                    <button
+                      type="button"
+                      onClick={handleResendOtp}
+                      className="text-link-blue hover:underline focus:outline-none"
+                    >
+                      Resend OTP
+                    </button>
+                  ) : (
+                    <span className="text-text-secondary">
+                      Resend OTP in {resendTimer}s
+                    </span>
+                  )}
+                </div>
               </div>
             )}
 
