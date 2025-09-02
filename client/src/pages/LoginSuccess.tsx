@@ -1,22 +1,55 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const LoginSuccess = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const [isProcessing, setIsProcessing] = useState(true);
 
   useEffect(() => {
-    const token = searchParams.get('token');
-    if (token) {
-      localStorage.setItem('authToken', token);
-      navigate('/dashboard', { replace: true });
-    } else {
-      // Handle error or no token case
-      navigate('/login', { replace: true });
-    }
+    const processLogin = async () => {
+      try {
+        const token = searchParams.get('token');
+        
+        if (token) {
+          // Store the token
+          localStorage.setItem('authToken', token);
+          
+          // Show success message
+          toast.success('Login successful!');
+          
+          // Navigate to dashboard
+          navigate('/dashboard', { replace: true });
+        } else {
+          // No token found
+          toast.error('Login failed - no token received');
+          navigate('/login', { replace: true });
+        }
+      } catch (error) {
+        console.error('Login processing error:', error);
+        toast.error('An error occurred during login');
+        navigate('/login', { replace: true });
+      } finally {
+        setIsProcessing(false);
+      }
+    };
+
+    processLogin();
   }, [navigate, searchParams]);
 
-  return <div>Loading...</div>;
+  if (isProcessing) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Processing your login...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
 };
 
 export default LoginSuccess;

@@ -3,6 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import api from '../services/Api';
 import { toast } from 'react-toastify';
 
+// This is the URL that starts the Google OAuth flow on your backend
+const GOOGLE_AUTH_URL = 'http://localhost:5000/api/auth/google';
+
 const ImagePanel = () => (
     <div className="hidden md:block">
       <img
@@ -70,9 +73,27 @@ const LoginPage = () => {
                   )}
                   
                   <button type="submit" className="w-full bg-primary-blue text-white font-medium py-3 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue">
-                    {otpSent ? 'Verify & Sign In' : 'Sign In'}
+                    {otpSent ? 'Verify & Sign In' : 'Sign In with Email'}
                   </button>
               </form>
+              
+              {/* NEW: Google Sign-in Button */}
+              <div className="relative my-6">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-border-default"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="bg-white px-2 text-text-secondary">OR</span>
+                </div>
+              </div>
+
+              <a href={GOOGLE_AUTH_URL} className="w-full">
+                <button className="w-full flex items-center justify-center gap-2 border border-border-default text-text-primary font-medium py-3 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue">
+                  <img className="w-5 h-5" src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google icon" />
+                  Sign in with Google
+                </button>
+              </a>
+              {/* END NEW SECTION */}
     
               <p className="text-sm text-center mt-6">
                 Don't have an account? <Link to="/signup" className="font-medium text-link-blue hover:underline">Sign up</Link>

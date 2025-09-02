@@ -106,7 +106,13 @@ export const googleCallback = (req: Request, res: Response) => {
   const user = req.user as IUser;
   const payload = { userId: user._id };
   const token = jwt.sign(payload, process.env.JWT_SECRET as string, { expiresIn: '3d' });
-  res.redirect(`${process.env.CLIENT_URL}/login/success?token=${token}`);
+  
+  // Temporarily hardcode the URL to debug
+  const clientUrl = process.env.CLIENT_URL || 'http://localhost:3000';
+  console.log('CLIENT_URL:', clientUrl); // Debug log
+  console.log('Redirecting to:', `${clientUrl}/login/success?token=${token}`);
+  
+  res.redirect(`${clientUrl}/login/success?token=${token}`);
 };
 
 // GET USER PROFILE
