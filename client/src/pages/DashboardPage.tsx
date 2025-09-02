@@ -76,21 +76,21 @@ const DashboardPage = () => {
     <div className="bg-gray-50 min-h-screen">
       <div className="max-w-3xl mx-auto px-4 py-8">
         {/* Welcome Card */}
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-8 border border-gray-200">
-          <div className="flex justify-between items-start">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-800 mb-2">
+        <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 mb-8 border border-gray-200">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+            <div className="flex-1">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">
                 Welcome{user ? `, ${user.name}` : ''}!
               </h1>
               {user && (
-                <p className="text-gray-600 text-lg">
+                <p className="text-gray-600 text-base sm:text-lg">
                   <span className='italic'>Email:</span> {user.email}
                 </p>
               )}
             </div>
             <button 
               onClick={handleLogout} 
-              className="bg-primary-blue hover:bg-indigo-700 text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+              className="bg-primary-blue hover:bg-indigo-700 text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 self-start sm:self-center whitespace-nowrap"
             >
               Logout
             </button>
