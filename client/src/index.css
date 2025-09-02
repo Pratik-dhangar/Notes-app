@@ -1,3 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Add this to your global CSS file (src/index.css or similar) */
+@keyframes colorShadow {
+  0% {
+    filter: drop-shadow(0 25px 50px rgba(59, 130, 246, 0.4));
+    transform: translateY(0px);
+  }
+  25% {
+    filter: drop-shadow(0 30px 60px rgba(147, 51, 234, 0.5));
+    transform: translateY(-12px);
+  }
+  50% {
+    filter: drop-shadow(0 35px 70px rgba(236, 72, 153, 0.6));
+    transform: translateY(-18px);
+  }
+  75% {
+    filter: drop-shadow(0 30px 60px rgba(16, 185, 129, 0.5));
+    transform: translateY(-12px);
+  }
+  100% {
+    filter: drop-shadow(0 25px 50px rgba(59, 130, 246, 0.4));
+    transform: translateY(0px);
+  }
+}
+
+.animate-color-shadow {
+  animation: colorShadow 6s ease-in-out infinite;
+}

@@ -8,9 +8,9 @@ import { logoImage, wallpaperImage } from '../assets';
 const GOOGLE_AUTH_URL = 'http://localhost:5000/api/auth/google';
 
 const ImagePanel = () => (
-    <div className="hidden md:block">
+    <div className="hidden md:flex items-center justify-center">
       <img
-        className="w-full h-full object-cover"
+        className="w-3/4 h-auto object-contain animate-color-shadow"
         src={wallpaperImage}
         alt="Welcome wallpaper"
       />
@@ -96,9 +96,9 @@ const LoginPage = () => {
     };
 
     return (
-        <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 bg-gray-50">
+        <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100">
           <div className="flex flex-col justify-center items-center p-8">
-            <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
+            <div className="w-full max-w-md bg-white/90 backdrop-blur-sm p-8 rounded-lg shadow-lg border border-white/20">
             {/* Logo Section */}
               <div className="flex justify-center mb-6">
                 <img 
