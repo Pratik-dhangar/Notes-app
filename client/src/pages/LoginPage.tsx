@@ -2,6 +2,7 @@ import { useState, useEffect, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../services/Api';
 import { toast } from 'react-toastify';
+import { logoImage, wallpaperImage } from '../assets';
 
 // This is the URL that starts the Google OAuth flow on your backend
 const GOOGLE_AUTH_URL = 'http://localhost:5000/api/auth/google';
@@ -10,8 +11,8 @@ const ImagePanel = () => (
     <div className="hidden md:block">
       <img
         className="w-full h-full object-cover"
-        src="https://hwdlte.com/wp-content/uploads/2024/02/windows-11-bloom-4k-wallpaper-3840x2160-scaled.jpg"
-        alt="Abstract wallpaper"
+        src={wallpaperImage}
+        alt="Welcome wallpaper"
       />
     </div>
 );
@@ -23,7 +24,6 @@ const LoginPage = () => {
     const [showOtp, setShowOtp] = useState(false);
     const [resendTimer, setResendTimer] = useState(0);
     const [canResend, setCanResend] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
     // Timer effect for resend functionality
@@ -44,7 +44,6 @@ const LoginPage = () => {
     }, [resendTimer]);
   
     const handleGetOtp = async () => {
-      setIsLoading(true);
       try {
         await api.post('/auth/login', { email });
         setOtpSent(true);
@@ -53,13 +52,10 @@ const LoginPage = () => {
         toast.success('OTP has been sent to your email!');
       } catch (err: any) {
         toast.error(err.response?.data?.message || 'Login failed.');
-      } finally {
-        setIsLoading(false);
       }
     };
   
     const handleVerifyOtp = async () => {
-      setIsLoading(true);
       try {
         const { data } = await api.post('/auth/verify-otp', { email, otp });
         localStorage.setItem('authToken', data.token);
@@ -67,8 +63,6 @@ const LoginPage = () => {
         navigate('/dashboard');
       } catch (err: any) {
         toast.error(err.response?.data?.message || 'Invalid OTP.');
-      } finally {
-        setIsLoading(false);
       }
     };
 
@@ -98,6 +92,14 @@ const LoginPage = () => {
         <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 bg-gray-50">
           <div className="flex flex-col justify-center items-center p-8">
             <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
+            {/* Logo Section */}
+              <div className="flex justify-center mb-6">
+                <img 
+                  src={logoImage} 
+                  alt="Company Logo" 
+                  className="h-12 w-auto" // Adjust height as needed
+                />
+              </div>
               <h1 className="text-3xl font-bold text-text-primary mb-2">Sign in</h1>
               <p className="text-text-secondary mb-6">Welcome back! Please enter your details.</p>
     
@@ -156,22 +158,8 @@ const LoginPage = () => {
                     </div>
                   )}
                   
-                  <button 
-                    type="submit" 
-                    disabled={isLoading}
-                    className="w-full bg-primary-blue text-white font-medium py-3 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-                  >
-                    {isLoading ? (
-                      <>
-                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        {otpSent ? 'Verifying...' : 'Sending OTP...'}
-                      </>
-                    ) : (
-                      otpSent ? 'Verify & Sign In' : 'Sign In with Email'
-                    )}
+                  <button type="submit" className="w-full bg-primary-blue text-white font-medium py-3 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue">
+                    {otpSent ? 'Verify & Sign In' : 'Sign In with Email'}
                   </button>
               </form>
               
