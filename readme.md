@@ -1,8 +1,8 @@
-# 📝 Notes App
+<h1 align="center">📝 Notes App</h1>
 
-![Notes App Banner](https://via.placeholder.com/1200x300.png?text=Notes+App+-+Your+Personal+Note+Manager)
-
-A full-stack notes application built with React and Node.js, featuring user authentication and note management.
+<p align="center">
+  A full-stack notes application built with React and Node.js, featuring user authentication and note management.
+</p>
 
 ---
 
