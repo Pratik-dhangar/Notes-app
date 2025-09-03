@@ -1,76 +1,109 @@
-# Notes App
+# 📝 Notes App
+
+![Notes App Banner](https://via.placeholder.com/1200x300.png?text=Notes+App+-+Your+Personal+Note+Manager)
 
 A full-stack notes application built with React and Node.js, featuring user authentication and note management.
 
-## Tech Stack
+---
 
-**Frontend:**
-- React 19 with TypeScript
-- Vite for development
-- Tailwind CSS for styling
-- React Router for navigation
+## 🚀 Tech Stack
 
-**Backend:**
-- Node.js with Express and TypeScript
-- MongoDB with Mongoose
-- JWT authentication
-- Google OAuth integration
-- Email notifications
+### **Frontend:**
+- ⚛️ React 19 with TypeScript
+- ⚡ Vite for development
+- 🎨 Tailwind CSS for styling
+- 🔀 React Router for navigation
 
-## Getting Started
+### **Backend:**
+- 🟢 Node.js with Express and TypeScript
+- 🍃 MongoDB with Mongoose
+- 🔒 JWT authentication
+- 🌐 Google OAuth integration
+- ✉️ Email notifications
 
-### Prerequisites
-- Node.js (v16 or higher)
-- MongoDB database
-- npm or yarn
+---
 
-### Installation
+## 🛠️ Getting Started
 
-1. Clone the repository:
-```bash
-git clone https://github.com/Pratik-dhangar/Notes-app.git
-cd Notes-app
-```
+### **Prerequisites**
+- 📦 Node.js (v16 or higher)
+- 🍃 MongoDB database
+- 📥 npm or yarn
 
-2. Install client dependencies:
-```bash
-cd client
-npm install
-```
+### **Installation**
 
-3. Install server dependencies:
-```bash
-cd ../server
-npm install
-```
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/Pratik-dhangar/Notes-app.git
+   cd Notes-app
+   ```
 
-4. Set up environment variables:
-- Create `.env` file in the server directory
-- Add your MongoDB connection string, JWT secret, and Google OAuth credentials
+2. **Install client dependencies:**
+   ```bash
+   cd client
+   npm install
+   ```
 
-5. Start the development servers:
+3. **Install server dependencies:**
+   ```bash
+   cd ../server
+   npm install
+   ```
 
-**Server:**
-```bash
-cd server
-npm run dev
-```
+4. **Set up environment variables:**
+   - Create a `.env` file in the `server` directory
+   - Add the following:
+     ```
+     MONGO_URI=<your-mongodb-connection-string>
+     JWT_SECRET=<your-jwt-secret>
+     GOOGLE_CLIENT_ID=<your-google-client-id>
+     GOOGLE_CLIENT_SECRET=<your-google-client-secret>
+     EMAIL_USER=<your-email>
+     EMAIL_PASS=<your-email-password>
+     ```
 
-**Client:**
-```bash
-cd client
-npm run dev
-```
+5. **Start the development servers:**
 
-## Features
+   **Server:**
+   ```bash
+   cd server
+   npm run dev
+   ```
 
-- User registration and login
-- Google OAuth authentication
-- Create, read, update, and delete notes
-- Protected routes and user sessions
-- Responsive design
-- Email notifications
+   **Client:**
+   ```bash
+   cd client
+   npm run dev
+   ```
 
-## License
+6. Open your browser and navigate to:
+   ```
+   http://localhost:5173
+   ```
 
-MIT License
+---
+
+## ✨ Features
+
+- 🔐 **User Authentication:**
+  - User registration and login
+  - Google OAuth integration
+- 📝 **Notes Management:**
+  - Create, read, update, and delete notes
+- 🔒 **Protected Routes:**
+  - User-specific sessions
+- 📱 **Responsive Design:**
+  - Works seamlessly on all devices
+- ✉️ **Email Notifications:**
+  - OTP-based email verification
+
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License**.
+
+---
+
+### 🌟 **Contributions**
+Feel free to fork this repository and submit pull requests. Contributions are always welcome! 😊
