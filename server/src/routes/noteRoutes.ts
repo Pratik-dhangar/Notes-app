@@ -4,8 +4,7 @@ import { createNote, getNotes, deleteNote } from '../controllers/noteController'
 
 const router = Router();
 
-// This applies the 'protect' middleware to ALL routes defined in this file.
-// Any request to /api/notes/... will require a valid token.
+// All note routes require authentication
 router.use(protect);
 
 router.route('/')

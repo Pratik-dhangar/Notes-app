@@ -11,14 +11,11 @@ export const configurePassport = () => {
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        // Find if a user already exists with this Google ID
         let user = await User.findOne({ googleId: profile.id });
 
         if (user) {
-          // If user exists, return them
           return done(null, user);
         } else {
-          // If not, create a new user with Google profile info
           const newUser = new User({
             googleId: profile.id,
             name: profile.displayName,

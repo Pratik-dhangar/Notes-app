@@ -9,11 +9,11 @@ router.post('/generate-otp', generateOtp);
 router.post('/login', login);
 router.post('/verify-otp', verifyOtp);
 
-// Protected route for getting user profile
+// Protected route for user profile
 router.get('/profile', protect, getUserProfile);
 
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-// Route for Google to redirect to after authentication
+// Google callback after authentication
 router.get(
   '/google/callback',
   passport.authenticate('google', { failureRedirect: '/', session: false }),

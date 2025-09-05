@@ -22,7 +22,6 @@ class Logger {
       context
     };
 
-    // In development, use console for better formatting
     if (this.isDevelopment) {
       switch (level) {
         case 'error':
@@ -38,8 +37,6 @@ class Logger {
           console.log(`[${logEntry.timestamp}] INFO:`, message, context || '');
       }
     } else {
-      // In production, you could send logs to external service
-      // For now, we'll suppress most logs except errors
       if (level === 'error') {
         console.error(JSON.stringify(logEntry));
       }

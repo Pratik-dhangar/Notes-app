@@ -4,7 +4,6 @@ import api from "../services/Api";
 import { toast } from "react-toastify";
 import { logoImage, wallpaperImage } from "../assets";
 
-// This is the URL that starts the Google OAuth flow on your backend
 const GOOGLE_AUTH_URL = "http://localhost:5000/api/auth/google";
 
 const ImagePanel = () => (
@@ -28,7 +27,7 @@ const SignUpPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Timer effect for resend functionality
+  // Resend timer
   useEffect(() => {
     let interval: number;
     if (resendTimer > 0) {
@@ -80,7 +79,7 @@ const SignUpPage = () => {
       await api.post("/auth/generate-otp", { email, name, dateOfBirth });
       setResendTimer(15);
       setCanResend(false);
-      setOtp(""); // Clear current OTP
+      setOtp("");
       toast.success("New OTP has been sent to your email!");
     } catch (err: any) {
       toast.error(err.response?.data?.message || "Failed to resend OTP.");
@@ -100,12 +99,12 @@ const SignUpPage = () => {
     <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100">
       <div className="flex flex-col justify-center items-center p-8">
         <div className="w-full max-w-md bg-white/90 backdrop-blur-sm p-8 rounded-lg shadow-lg border border-white/20">
-          {/* Logo Section */}
+          {/* Logo */}
           <div className="flex justify-center mb-6">
             <img
               src={logoImage}
               alt="Company Logo"
-              className="h-12 w-auto" // Adjust height as needed
+              className="h-12 w-auto"
             />
           </div>
           <h1 className="text-3xl font-bold text-text-primary mb-2">Sign up</h1>
@@ -173,7 +172,6 @@ const SignUpPage = () => {
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
                   >
                     {showOtp ? (
-                      // Eye slash icon (hide)
                       <svg
                         className="w-5 h-5"
                         fill="none"
@@ -188,7 +186,6 @@ const SignUpPage = () => {
                         />
                       </svg>
                     ) : (
-                      // Eye icon (show)
                       <svg
                         className="w-5 h-5"
                         fill="none"
@@ -266,7 +263,7 @@ const SignUpPage = () => {
             </button>
           </form>
 
-          {/* NEW: Google Sign-in Button */}
+          {/* Google Sign-in */}
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-border-default"></div>
@@ -286,7 +283,6 @@ const SignUpPage = () => {
               Sign up with Google
             </button>
           </a>
-          {/* END NEW SECTION */}
 
           <p className="text-sm text-center mt-6">
             Already have an account?{" "}

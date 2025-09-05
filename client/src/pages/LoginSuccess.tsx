@@ -13,16 +13,10 @@ const LoginSuccess = () => {
         const token = searchParams.get('token');
         
         if (token) {
-          // Store the token
           localStorage.setItem('authToken', token);
-          
-          // Show success message
           toast.success('Login successful!');
-          
-          // Navigate to dashboard
           navigate('/dashboard', { replace: true });
         } else {
-          // No token found
           toast.error('Login failed - no token received');
           navigate('/login', { replace: true });
         }

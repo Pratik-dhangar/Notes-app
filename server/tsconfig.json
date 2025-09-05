@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
-    "target": "es2016",         // Target modern JavaScript version
-    "module": "commonjs",       // Use CommonJS modules
-    "rootDir": "./src",         // Source files are in 'src'
-    "outDir": "./dist",         // Compiled JS goes into 'dist'
-    "esModuleInterop": true,    // Allows for better module compatibility
+    "target": "es2016",
+    "module": "commonjs",
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "strict": true,             // Enable all strict type-checking
-    "skipLibCheck": true,       // Skip type checking of declaration files
+    "strict": true,
+    "skipLibCheck": true,
     "typeRoots": ["./node_modules/@types", "./src/types"]
   },
   "include": ["src/**/*"]

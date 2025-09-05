@@ -4,7 +4,6 @@ import api from '../services/Api';
 import { toast } from 'react-toastify';
 import { logoImage, wallpaperImage } from '../assets';
 
-// This is the URL that starts the Google OAuth flow on your backend
 const GOOGLE_AUTH_URL = 'http://localhost:5000/api/auth/google';
 
 const ImagePanel = () => (
