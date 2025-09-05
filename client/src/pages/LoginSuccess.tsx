@@ -27,7 +27,6 @@ const LoginSuccess = () => {
           navigate('/login', { replace: true });
         }
       } catch (error) {
-        console.error('Login processing error:', error);
         toast.error('An error occurred during login');
         navigate('/login', { replace: true });
       } finally {

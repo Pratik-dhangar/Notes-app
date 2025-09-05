@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import { logger } from './logger';
 
 const sendEmail = async (to: string, subject: string, text: string) => {
   try {
@@ -19,9 +20,9 @@ const sendEmail = async (to: string, subject: string, text: string) => {
       text: text,
     });
 
-    console.log(`✉️ Email sent to ${to}`);
+    logger.info('Email sent successfully', { to });
   } catch (error) {
-    console.error('Error sending email:', error);
+    logger.error('Error sending email', { to, error });
     throw new Error('Email could not be sent.');
   }
 };

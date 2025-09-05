@@ -6,6 +6,7 @@ import connectDB from './config/db';
 import authRoutes from './routes/authRoutes'
 import noteRoutes from './routes/noteRoutes';
 import { configurePassport } from './config/passport';
+import { logger } from './utils/logger';
 
 // Load environment variables
 dotenv.config();
@@ -34,5 +35,5 @@ app.use('/api/notes', noteRoutes); // notes routes
 
 
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  logger.info(`Server is running on port ${PORT}`);
 });

@@ -5,6 +5,7 @@ import * as otpGenerator from 'otp-generator';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import sendEmail from '../utils/mailer';
+import { logger } from '../utils/logger';
 
 
 // SIGNUP: Generate OTP for a NEW user
@@ -30,7 +31,7 @@ export const generateOtp = async (req: Request, res: Response) => {
     await sendEmail(email, 'Your OTP for Notes App', `Your verification code is: ${otp}`);
     res.status(200).json({ message: 'OTP sent successfully. Please verify to complete signup.' });
   } catch (error) {
-    console.error(error);
+    logger.error('Generate OTP error', { error });
     res.status(500).json({ message: 'Server Error' });
   }
 };
@@ -56,7 +57,7 @@ export const login = async (req: Request, res: Response) => {
     await sendEmail(email, 'Your Login OTP for Notes App', `Your login OTP is: ${otp}`);
     res.status(200).json({ message: 'Login OTP sent successfully to your email.' });
   } catch (error) {
-    console.error(error);
+    logger.error('Login error', { error });
     res.status(500).json({ message: 'Server Error' });
   }
 };
@@ -96,7 +97,7 @@ export const verifyOtp = async (req: Request, res: Response) => {
       user: { id: user._id, name: user.name, email: user.email },
     });
   } catch (error) {
-    console.error(error);
+    logger.error('Verify OTP error', { error });
     res.status(500).json({ message: 'Server Error' });
   }
 };
@@ -109,8 +110,6 @@ export const googleCallback = (req: Request, res: Response) => {
   
   // Temporarily hardcode the URL to debug
   const clientUrl = process.env.CLIENT_URL || 'http://localhost:3000';
-  console.log('CLIENT_URL:', clientUrl); // Debug log
-  console.log('Redirecting to:', `${clientUrl}/login/success?token=${token}`);
   
   res.redirect(`${clientUrl}/login/success?token=${token}`);
 };
@@ -135,7 +134,7 @@ export const getUserProfile = async (req: Request, res: Response) => {
       dateOfBirth: user.dateOfBirth,
     });
   } catch (error) {
-    console.error(error);
+    logger.error('Get user profile error', { error });
     res.status(500).json({ message: 'Server Error' });
   }
 };
