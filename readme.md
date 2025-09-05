@@ -102,11 +102,5 @@
 
 ---
 
-## 📜 License
-
-This project is licensed under the **MIT License**.
-
----
-
 ### 🌟 **Contributions**
 Feel free to fork this repository and submit pull requests. Contributions are always welcome! 😊
