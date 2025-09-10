@@ -1,6 +1,6 @@
 <h1 align="center">📝 Notes App</h1>
 <div align="center">  <a href="https://notes-app-470813.web.app/signup" target="_blank">
-    <img src="https://img.shields.io/badge/🚀FronteEnd_Demo-Click_Here-success?style=for-the-badge" alt="Live Demo">
+    <img src="https://img.shields.io/badge/🚀FrontEnd_Demo-Click_Here-success?style=for-the-badge" alt="Live Demo">
   </a> </div>
 
 <p align="center">
